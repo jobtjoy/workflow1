@@ -44,5 +44,5 @@ jobs:
         run: |
           pwd
           echo ${{github.event.inputs.foldername}}
-      - name: Run a one-line script
+      - name: Run a script
         run: echo "${{ github.event.inputs.tags }} ${{ fromJSON('["", "🥳"]')[github.event.inputs.print_tags == 'true'] }} ${{ github.event.inputs.foldername }}"
