@@ -7,14 +7,21 @@ on:
   workflow_dispatch:
     inputs:
       foldername:
-        type: choice
         required: true
         description: test
+        type: choice
+        default: 'B'
         options:
           - A
           - B
-  # push:
-  #   branches: "test"
+      print_tags:
+        description: 'True to print to STDOUT'
+        required: true
+        type: boolean
+      tags:
+        description: 'Test scenario tags'
+        required: true
+        type: string    
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -37,3 +44,5 @@ jobs:
         run: |
           pwd
           echo ${{github.event.inputs.foldername}}
+      - name: Run a one-line script
+        run: echo "${{ github.event.inputs.tags }} ${{ fromJSON('["", "🥳"]')[github.event.inputs.print_tags == 'true'] }} ${{ github.event.inputs.foldername }}"
