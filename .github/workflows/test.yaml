@@ -29,6 +29,7 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    environment: DEV
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
@@ -46,4 +47,6 @@ jobs:
           ls -la
           java --version
           mvn --version
+          echo "ENV_NAME is ${ secrets.ENV_NAME }"
+          echo "ENV_VAR is ${ vars.ENV_VAR }"
           echo ${{github.event.inputs.foldername}}
