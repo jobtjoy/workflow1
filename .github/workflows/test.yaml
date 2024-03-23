@@ -46,3 +46,10 @@ jobs:
           echo ${{github.event.inputs.foldername}}
       - name: Run a script
         run: echo "${{ github.event.inputs.tags }} ${{ fromJSON('["", "🥳"]')[github.event.inputs.print_tags == 'true'] }} ${{ github.event.inputs.foldername }}"
+      - name: Run a multi-line script
+        run: |
+          cd sample
+          ls -la
+          echo java --version
+          echo mvn --version
+          echo ${{github.event.inputs.foldername}}
