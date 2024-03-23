@@ -44,6 +44,6 @@ jobs:
         run: |
           cd sample
           ls -la
-          echo java --version
-          echo mvn --version
+          java --version
+          mvn --version
           echo ${{github.event.inputs.foldername}}
