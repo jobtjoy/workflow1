@@ -61,5 +61,5 @@ jobs:
           cd sample
           mvn --batch-mode deploy
           env:
-            GITHUB_TOKEN: ${{ REPO_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
           
