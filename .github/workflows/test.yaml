@@ -50,3 +50,5 @@ jobs:
           echo "ENV_NAME is ${{ secrets.ENV_NAME }}"
           echo "ENV_VAR is ${{ vars.ENV_VAR }}"
           echo ${{github.event.inputs.foldername}}
+          mvn clean package
+          ls -la
