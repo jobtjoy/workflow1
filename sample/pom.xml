@@ -72,4 +72,12 @@
       </plugins>
     </pluginManagement>
   </build>
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/jobtjoy/workflow1</url>
+    </repository>
+  </distributionManagement>
+  
 </project>
