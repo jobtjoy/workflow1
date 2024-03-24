@@ -56,6 +56,11 @@ jobs:
           echo "GITHUB_ACTOR is $GITHUB_ACTOR "
           mvn clean package
           ls -la
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'   
       - name: publish pakagge
         run: |
           cd sample
