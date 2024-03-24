@@ -47,6 +47,6 @@ jobs:
           ls -la
           java --version
           mvn --version
-          echo "ENV_NAME is ${ secrets.ENV_NAME }"
-          echo "ENV_VAR is ${ vars.ENV_VAR }"
+          echo "ENV_NAME is ${{ secrets.ENV_NAME }}"
+          echo "ENV_VAR is ${{ vars.ENV_VAR }}"
           echo ${{github.event.inputs.foldername}}
