@@ -64,7 +64,8 @@ jobs:
       - name: publish pakagge
         run: |
           cd sample
-          mvn --batch-mode deploy
+          mvn help:effective-settings
+        # mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
           
