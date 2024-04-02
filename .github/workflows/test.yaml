@@ -72,7 +72,7 @@ jobs:
       steps:
       - name: Run a multi-line script
         run: |
-          cd sample
+          ls -la
           ls -la
       - name: Create Release
         id: create_release
