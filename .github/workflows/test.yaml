@@ -1,13 +1,12 @@
 name: Packaging and build workflow test
 on:
   workflow_dispatch:
-push:
-    branches: [ "test" ]
+  push:
+      branches: [ "test" ]
 jobs:
   build:
     runs-on: ubuntu-latest
     environment: DEV
-
     steps:
       - uses: actions/checkout@v3
       - name: Run a multi-line script
@@ -18,7 +17,6 @@ jobs:
           mvn --version
           echo "ENV_NAME is ${{ secrets.ENV_NAME }}"
           echo "ENV_VAR is ${{ vars.ENV_VAR }}"
-          echo ${{github.event.inputs.foldername}}
           echo "GITHUB_ACTOR is $GITHUB_ACTOR "
           mvn clean package
           ls -la
