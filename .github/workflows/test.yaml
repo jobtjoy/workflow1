@@ -72,8 +72,10 @@ jobs:
       steps:
       - name: Run a multi-line script
         run: |
-          cd ..
           ls -la
+          ls -la
+          ls
+          cd sample
           ls -la
       - name: Create Release
         id: create_release
@@ -94,7 +96,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .sample/target/*.jar    # Specify the path to your package here
+          asset_path: sample/target/*.jar    # Specify the path to your package here
           asset_name: test_name  # Specify the name of your package here
           asset_content_type: application/java-archive
 
