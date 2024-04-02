@@ -64,11 +64,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
-          tag_name: v1.0.5 # Specify your tag name here
+          tag_name: v1.0.6 # Specify your tag name here
           release_name: Release v1.0.0  # Specify your release name here
           body: Release notes for version 1.0.0  # Specify your release notes here
           draft: false
           prerelease: false
+
+            - name: Run a multi-line script
+        run: |
+          ls -la
+          cd sample
+          ls -la
+          cd target
+          ls -la    
 
       - name: Upload Package
         id: upload-release-asset
@@ -77,7 +85,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: sample/target/*.jar    # Specify the path to your package here
+          asset_path: /sample/target/*.jar    # Specify the path to your package here
           asset_name: test_name  # Specify the name of your package here
           asset_content_type: application/java-archive
 
