@@ -57,15 +57,47 @@ jobs:
           mvn clean package
           ls -la
 
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '11'
-          distribution: 'temurin'   
-      - name: publish pakagge
-        run: |
-          cd sample
-          mvn help:effective-settings
-        # mvn --batch-mode deploy
+
+
+
+  release:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        with:
+          tag_name: v1.0.0  # Specify your tag name here
+          release_name: Release v1.0.0  # Specify your release name here
+          body: Release notes for version 1.0.0  # Specify your release notes here
+          draft: false
+          prerelease: false
+
+      - name: Upload Package
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/*.jar    # Specify the path to your package here
+          asset_name: test_name  # Specify the name of your package here
+          # asset_content_type: application/java-archive
+
+
+
+      # - uses: actions/setup-java@v4
+      #   with:
+      #     java-version: '11'
+      #     distribution: 'temurin'   
+      # - name: publish pakagge
+      #   run: |
+      #     cd sample
+      #     mvn help:effective-settings
+      #   # mvn --batch-mode deploy
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
           
