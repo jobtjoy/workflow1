@@ -56,6 +56,8 @@ jobs:
           echo "GITHUB_ACTOR is $GITHUB_ACTOR "
           mvn clean package
           ls -la
+          cd target
+          ls -la
 
 
 
@@ -68,6 +70,10 @@ jobs:
         contents: read
         packages: write
       steps:
+      - name: Run a multi-line script
+        run: |
+          cd sample
+          ls -la
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -87,7 +93,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/*.jar    # Specify the path to your package here
+          asset_path: .sample/target/*.jar    # Specify the path to your package here
           asset_name: test_name  # Specify the name of your package here
           asset_content_type: application/java-archive
 
