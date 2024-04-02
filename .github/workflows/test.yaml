@@ -28,8 +28,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
-          tag_name: v1.0.4 # Specify your tag name here
-          release_name: Release v1.0.0  # Specify your release name here
+          tag_name: ${{ github.ref }} # Specify your tag name here
+          release_name: Release ${{ github.ref }}  # Specify your release name here
           body: Release notes for version 1.0.0  # Specify your release notes here
           draft: false
           prerelease: false
