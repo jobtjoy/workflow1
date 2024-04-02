@@ -58,32 +58,12 @@ jobs:
           ls -la
           cd target
           ls -la
-
-
-
-
-  release:
-      needs: build
-      runs-on: ubuntu-latest
-      environment: DEV
-      permissions:
-        contents: read
-        packages: write
-      steps:
-      - name: Run a multi-line script
-        run: |
-          ls -la
-          ls -la
-          ls
-          cd sample
-          ls -la
       - name: Create Release
-        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
-          tag_name: v1.0.3  # Specify your tag name here
+          tag_name: v1.0.4 # Specify your tag name here
           release_name: Release v1.0.0  # Specify your release name here
           body: Release notes for version 1.0.0  # Specify your release notes here
           draft: false
@@ -99,6 +79,11 @@ jobs:
           asset_path: sample/target/*.jar    # Specify the path to your package here
           asset_name: test_name  # Specify the name of your package here
           asset_content_type: application/java-archive
+
+
+
+
+
 
 
 
