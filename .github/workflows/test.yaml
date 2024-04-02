@@ -28,7 +28,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
-          tag_name: v1.0.0 # Specify your tag name here
+          tag_name: v1.0.3 # Specify your tag name here
           release_name: Release v1.0.0  # Specify your release name here
           body: Release notes for version 1.0.0  # Specify your release notes here
           draft: false
