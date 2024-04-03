@@ -56,6 +56,18 @@ jobs:
           echo "new_version: ${{ steps.find_module.outputs.new_version }}"
           echo "module_group: ${{ steps.find_module.outputs.module_group }}"
 
+      - name: Set up Bash second
+        run: |
+          module_name="sample"
+          pom_files=$(find . -name 'pom.xml')
+          for pom_file in $pom_files; do
+              if grep -q "<artifactId>$module_name</artifactId>" "$pom_file"; then
+                module_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
+                echo "Module version: $module_version"
+              fi
+          done      
+
+
   # build:
   #   runs-on: ubuntu-latest
   #   environment: DEV
