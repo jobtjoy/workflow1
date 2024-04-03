@@ -42,6 +42,11 @@ jobs:
                   echo "::set-output name=module_version::$module_version"
                   echo "::set-output name=new_version::$new_version"
                   echo "Module version: $module_version"
+                  mvn versions:set -DnewVersion="$new_version" -DgenerateBackupPoms=false -f "$pom_file"
+                  echo "Version of module '$module_name' in pom_file incremented to $new_version"
+                  echo "Version of module '$module_name' in $pom_file incremented to $new_version"
+                  module_version_new=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
+                  echo "::set-output name=module_version_new::$module_version_new"
               fi
           done
       - name: Print Module Path
@@ -49,6 +54,7 @@ jobs:
           echo "Module Path: ${{ steps.find_module.outputs.module_path }}"
           echo "Module version: ${{ steps.find_module.outputs.module_version }}"
           echo "new_version: ${{ steps.find_module.outputs.new_version }}"
+          echo "module_version_new: ${{ steps.find_module.outputs.module_version_new }}"
 
   # build:
   #   runs-on: ubuntu-latest
