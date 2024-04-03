@@ -2,13 +2,13 @@ name: Packaging and build workflow test
 #TODO: ## Finish up the **support** section of this doc
 on:
   workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Type of version change: major, minor, or patch'
+        required: true
+        default: 'patch' 
   push:
-      branches: [ "test" ]
-  inputs:
-    version_type:
-      description: 'Type of version change: major, minor, or patch'
-      required: true
-      default: 'patch'      
+      branches: [ "test" ]     
 jobs:
   init:
     runs-on: ubuntu-latest
