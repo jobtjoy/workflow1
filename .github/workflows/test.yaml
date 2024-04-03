@@ -1,48 +1,66 @@
 name: Packaging and build workflow test
+#TODO: ## Finish up the **support** section of this doc
 on:
   workflow_dispatch:
   push:
       branches: [ "test" ]
 jobs:
-  build:
+  init:
     runs-on: ubuntu-latest
     environment: DEV
     steps:
-      - uses: actions/checkout@v3
-      - name: Run a multi-line script
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Set up Bash
         run: |
-          cd sample
-          ls -la
-          java --version
-          mvn --version
-          echo "ENV_NAME is ${{ secrets.ENV_NAME }}"
-          echo "ENV_VAR is ${{ vars.ENV_VAR }}"
-          echo "GITHUB_ACTOR is $GITHUB_ACTOR "
-          mvn clean package
-          ls -la
-          cd target
-          ls -la       
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-        with:
-          tag_name: v1.0.10 # Specify your tag name here
-          release_name: Release ${{ github.ref }}  # Specify your release name here
-          body: Release notes for version 1.0.0  # Specify your release notes here
-          draft: false
-          prerelease: false
-      - name: Run a multi-line script
-        run: |
-          ls -la  
-      - name: Upload Package
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./sample/target/sample-1.0-SNAPSHOT.jar   # Specify the path to your package here
-          asset_name: test_name_v2  # Specify the name of your package here
-          asset_content_type: application/java-archive
+          module_name="sample"
+          pom_files=$(find . -name 'pom.xml')
+          for pom_file in $pom_files; do
+              if grep -q "<artifactId>$module_name</artifactId>" "$pom_file"; then
+                  module_path=$(dirname "$pom_file")
+                  echo "Module '$module_name' found at: $module_path"
+              fi
+          done
+
+  # build:
+  #   runs-on: ubuntu-latest
+  #   environment: DEV
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Run a multi-line script
+  #       run: |
+  #         cd sample
+  #         ls -la
+  #         java --version
+  #         mvn --version
+  #         echo "ENV_NAME is ${{ secrets.ENV_NAME }}"
+  #         echo "ENV_VAR is ${{ vars.ENV_VAR }}"
+  #         echo "GITHUB_ACTOR is $GITHUB_ACTOR "
+  #         mvn clean package
+  #         ls -la
+  #         cd target
+  #         ls -la       
+  #     - name: Create Release
+  #       id: create_release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+  #       with:
+  #         tag_name: v1.0.10 # Specify your tag name here
+  #         release_name: Release ${{ github.ref }}  # Specify your release name here
+  #         body: Release notes for version 1.0.0  # Specify your release notes here
+  #         draft: false
+  #         prerelease: false
+  #     - name: Run a multi-line script
+  #       run: |
+  #         ls -la  
+  #     - name: Upload Package
+  #       id: upload-release-asset
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+  #       with:
+  #         upload_url: ${{ steps.create_release.outputs.upload_url }}
+  #         asset_path: ./sample/target/sample-1.0-SNAPSHOT.jar   # Specify the path to your package here
+  #         asset_name: test_name_v2  # Specify the name of your package here
+  #         asset_content_type: application/java-archive
