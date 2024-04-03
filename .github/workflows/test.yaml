@@ -81,7 +81,7 @@ jobs:
           release_name: Release ${{ github.ref }}  # Specify your  release name here 
           body: Release notes for version 1.0.0  # Specify your release notes  here
           draft: false
-          prerelease: true
+          prerelease: false
       - name: Run a multi-line script
         run: |
           ls -la  
