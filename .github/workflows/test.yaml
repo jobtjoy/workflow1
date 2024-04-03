@@ -78,7 +78,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
           tag_name: v1.0.15 # Specify your tag name here
-          release_name: Release ${{ github.ref }}  # Specify your release name here 
+          release_name: Release ${{ github.ref }}  # Specify your  release name here 
           body: Release notes for version 1.0.0  # Specify your release notes  here
           draft: true
           prerelease: false
