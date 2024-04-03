@@ -10,91 +10,88 @@ on:
   push:
       branches: [ "test" ]     
 jobs:
-  init:
-    runs-on: ubuntu-latest
-    environment: DEV
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Set up Bash
-        id: find_module
-        run: |
-          module_name="sample"
-          pom_files=$(find . -name 'pom.xml')
-          for pom_file in $pom_files; do
-              if grep -q "<artifactId>$module_name</artifactId>" "$pom_file"; then
-                  case "${{ github.event.inputs.version_type }}" in
-                    major)
-                      new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1+1".0.0"}')
-                      ;;
-                    minor)
-                      new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1"."$2+1".0"}')
-                      ;;
-                    patch|*)
-                      new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1"."$2"."$3+1}')
-                      ;;
-                  esac
-
-                  module_path=$(dirname "$pom_file")
-                  module_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
-                  echo "Module '$module_name' found at: $module_path"
-                  echo "::set-output name=module_path::$module_path"
-                  echo "::set-output name=module_version::$module_version"
-                  echo "::set-output name=new_version::$new_version"
-                  echo "Module version: $module_version"
-                  mvn versions:set -DnewVersion="$new_version" -DgenerateBackupPoms=false -f "$pom_file"
-                  echo "Version of module '$module_name' in pom_file incremented to $new_version"
-                  echo "Version of module '$module_name' in $pom_file incremented to $new_version"
-                  module_version_new=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
-                  echo "::set-output name=module_version_new::$module_version_new"
-              fi
-          done
-      - name: Print Module Path
-        run: |
-          echo "Module Path: ${{ steps.find_module.outputs.module_path }}"
-          echo "Module version: ${{ steps.find_module.outputs.module_version }}"
-          echo "new_version: ${{ steps.find_module.outputs.new_version }}"
-          echo "module_version_new: ${{ steps.find_module.outputs.module_version_new }}"
-
-  # build:
+  # init:
   #   runs-on: ubuntu-latest
   #   environment: DEV
   #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Run a multi-line script
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v3
+  #     - name: Set up Bash
+  #       id: find_module
   #       run: |
-  #         cd sample
-  #         ls -la
-  #         java --version
-  #         mvn --version
-  #         echo "ENV_NAME is ${{ secrets.ENV_NAME }}"
-  #         echo "ENV_VAR is ${{ vars.ENV_VAR }}"
-  #         echo "GITHUB_ACTOR is $GITHUB_ACTOR "
-  #         mvn clean package
-  #         ls -la
-  #         cd target
-  #         ls -la       
-  #     - name: Create Release
-  #       id: create_release
-  #       uses: actions/create-release@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-  #       with:
-  #         tag_name: v1.0.10 # Specify your tag name here
-  #         release_name: Release ${{ github.ref }}  # Specify your release name here
-  #         body: Release notes for version 1.0.0  # Specify your release notes here
-  #         draft: false
-  #         prerelease: false
-  #     - name: Run a multi-line script
+  #         module_name="sample"
+  #         pom_files=$(find . -name 'pom.xml')
+  #         for pom_file in $pom_files; do
+  #             if grep -q "<artifactId>$module_name</artifactId>" "$pom_file"; then
+  #                 case "${{ github.event.inputs.version_type }}" in
+  #                   major)
+  #                     new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1+1".0.0"}')
+  #                     ;;
+  #                   minor)
+  #                     new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1"."$2+1".0"}')
+  #                     ;;
+  #                   patch|*)
+  #                     new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1"."$2"."$3+1}')
+  #                     ;;
+  #                 esac
+
+  #                 module_path=$(dirname "$pom_file")
+  #                 module_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
+  #                 echo "Module '$module_name' found at: $module_path"
+  #                 echo "::set-output name=module_path::$module_path"
+  #                 echo "::set-output name=module_version::$module_version"
+  #                 echo "::set-output name=new_version::$new_version"
+  #                 echo "Module version: $module_version"
+  #                 mvn versions:set -DnewVersion="$new_version" -DgenerateBackupPoms=false -f "$pom_file"
+  #                 echo "Version of module '$module_name' in pom_file incremented to $new_version"
+  #                 echo "Version of module '$module_name' in $pom_file incremented to $new_version"
+  #             fi
+  #         done
+  #     - name: Print Module Path
   #       run: |
-  #         ls -la  
-  #     - name: Upload Package
-  #       id: upload-release-asset
-  #       uses: actions/upload-release-asset@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-  #       with:
-  #         upload_url: ${{ steps.create_release.outputs.upload_url }}
-  #         asset_path: ./sample/target/sample-1.0-SNAPSHOT.jar   # Specify the path to your package here
-  #         asset_name: test_name_v2  # Specify the name of your package here
-  #         asset_content_type: application/java-archive
+  #         echo "Module Path: ${{ steps.find_module.outputs.module_path }}"
+  #         echo "Module version: ${{ steps.find_module.outputs.module_version }}"
+  #         echo "new_version: ${{ steps.find_module.outputs.new_version }}"
+
+  build:
+    runs-on: ubuntu-latest
+    environment: DEV
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run a multi-line script
+        run: |
+          cd sample
+          ls -la
+          java --version
+          mvn --version
+          echo "ENV_NAME is ${{ secrets.ENV_NAME }}"
+          echo "ENV_VAR is ${{ vars.ENV_VAR }}"
+          echo "GITHUB_ACTOR is $GITHUB_ACTOR "
+          mvn clean package
+          ls -la
+          cd target
+          ls -la       
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        with:
+          tag_name: v1.0.12 # Specify your tag name here
+          release_name: Release ${{ github.ref }}  # Specify your release name here
+          body: Release notes for version 1.0.0  # Specify your release notes here
+          draft: false
+          prerelease: false
+      - name: Run a multi-line script
+        run: |
+          ls -la  
+      - name: Upload Package
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./sample/target/sample-1.0-SNAPSHOT.jar   # Specify the path to your package here
+          asset_name: test_name_v2  # Specify the name of your package here
+          asset_content_type: application/java-archive
