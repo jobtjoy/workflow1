@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
   push:
       branches: [ "test" ]
+  inputs:
+    version_type:
+      description: 'Type of version change: major, minor, or patch'
+      required: true
+      default: 'patch'      
 jobs:
   init:
     runs-on: ubuntu-latest
     environment: DEV
-    inputs:
-      version_type:
-        description: 'Type of version change: major, minor, or patch'
-        required: true
-        default: 'patch'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
