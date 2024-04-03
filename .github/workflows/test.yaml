@@ -80,7 +80,7 @@ jobs:
           tag_name: v1.0.14 # Specify your tag name here
           release_name: Release ${{ github.ref }}  # Specify your release name here
           body: Release notes for version 1.0.0  # Specify your release notes here
-          draft: false
+          draft: true
           prerelease: false
       - name: Run a multi-line script
         run: |
