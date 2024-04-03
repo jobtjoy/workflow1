@@ -58,6 +58,8 @@ jobs:
 
       - name: Set up Bash second
         run: |
+          cd "${{ steps.find_module.outputs.module_path }}/target"
+          ls
           module_name="sample"
           pom_files=$(find . -name 'pom.xml')
           for pom_file in $pom_files; do
