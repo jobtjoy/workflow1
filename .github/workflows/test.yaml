@@ -74,10 +74,7 @@ jobs:
       - name: Get recent commit message
         id: get_commit_message
         run: echo "::set-output name=message::$(git log --format=%B -n 1 ${{ github.sha }})"
-      
-      - name: Print recent commit message
-        run: echo "Recent commit message: ${{ steps.get_commit_message.outputs.message }}"          
-
+  
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
