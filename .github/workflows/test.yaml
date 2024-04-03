@@ -19,8 +19,10 @@ jobs:
           for pom_file in $pom_files; do
               if grep -q "<artifactId>$module_name</artifactId>" "$pom_file"; then
                   module_path=$(dirname "$pom_file")
+                  module_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
                   echo "Module '$module_name' found at: $module_path"
                   echo "::set-output name=module_path::$module_path"
+                  echo "Module version: $module_version"
               fi
           done
       - name: Print Module Path
