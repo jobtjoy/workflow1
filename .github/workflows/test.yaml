@@ -12,17 +12,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Set up Bash
+        id: find_module
         run: |
           module_name="sample"
           pom_files=$(find . -name 'pom.xml')
           for pom_file in $pom_files; do
               if grep -q "<artifactId>$module_name</artifactId>" "$pom_file"; then
                   module_path=$(dirname "$pom_file")
-                  module_version=$(mvn help:evaluate -Dexpression=project.version -DforceStdout -f "$pom_file" | grep -v '\[INFO\]')
+      #  module_version=$(mvn help:evaluate -Dexpression=project.version -DforceStdout -f "$pom_file" | grep -v '\[INFO\]')
                   echo "Module '$module_name' found at: $module_path"
-                  echo "Module version: $module_version"
+                  # echo "Module version: $module_version"
+                  echo "::set-output name=module_path::$module_path"
               fi
           done
+
+      - name: Print Module Path
+        run: |
+          echo "Module Path: ${{ steps.find_module.outputs.module_path }}"
 
   # build:
   #   runs-on: ubuntu-latest
