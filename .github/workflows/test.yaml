@@ -70,16 +70,23 @@ jobs:
           mvn clean package
           ls -la
           cd target
-          ls -la       
+          ls -la 
+      - name: Get recent commit message
+        id: get_commit_message
+        run: echo "::set-output name=message::$(git log --format=%B -n 1 ${{ github.sha }})"
+      
+      - name: Print recent commit message
+        run: echo "Recent commit message: ${{ steps.get_commit_message.outputs.message }}"          
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
-          tag_name: vro-1.0.15 # Specify your tag name here
+          tag_name: vro-1.0.16 # Specify your tag name here
           release_name: Release ${{ github.ref }}  # Specify your  release name here 
-          body: Release notes for version 1.0.0  # Specify your release notes  here
+          body: ${{ steps.get_commit_message.outputs.message }}  # Specify your release notes  here
           draft: false
           prerelease: false
       - name: Run a multi-line script
