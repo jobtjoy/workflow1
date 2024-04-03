@@ -8,6 +8,11 @@ jobs:
   init:
     runs-on: ubuntu-latest
     environment: DEV
+    inputs:
+      version_type:
+        description: 'Type of version change: major, minor, or patch'
+        required: true
+        default: 'patch'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -18,11 +23,24 @@ jobs:
           pom_files=$(find . -name 'pom.xml')
           for pom_file in $pom_files; do
               if grep -q "<artifactId>$module_name</artifactId>" "$pom_file"; then
+                  case "${{ github.event.inputs.version_type }}" in
+                    major)
+                      new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1+1".0.0"}')
+                      ;;
+                    minor)
+                      new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1"."$2+1".0"}')
+                      ;;
+                    patch|*)
+                      new_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file" | awk -F '.' '{print $1"."$2"."$3+1}')
+                      ;;
+                  esac
+
                   module_path=$(dirname "$pom_file")
                   module_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
                   echo "Module '$module_name' found at: $module_path"
                   echo "::set-output name=module_path::$module_path"
                   echo "::set-output name=module_version::$module_version"
+                  echo "::set-output name=new_version::$new_version"
                   echo "Module version: $module_version"
               fi
           done
@@ -30,6 +48,7 @@ jobs:
         run: |
           echo "Module Path: ${{ steps.find_module.outputs.module_path }}"
           echo "Module version: ${{ steps.find_module.outputs.module_version }}"
+          echo "new_version: ${{ steps.find_module.outputs.new_version }}"
 
   # build:
   #   runs-on: ubuntu-latest
