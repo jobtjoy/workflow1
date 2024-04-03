@@ -22,12 +22,14 @@ jobs:
                   module_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f "$pom_file")
                   echo "Module '$module_name' found at: $module_path"
                   echo "::set-output name=module_path::$module_path"
+                  echo "::set-output name=module_version::$module_version"
                   echo "Module version: $module_version"
               fi
           done
       - name: Print Module Path
         run: |
           echo "Module Path: ${{ steps.find_module.outputs.module_path }}"
+          echo "Module version: ${{ steps.find_module.outputs.module_version }}"
 
   # build:
   #   runs-on: ubuntu-latest
